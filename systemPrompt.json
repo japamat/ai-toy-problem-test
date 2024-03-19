@@ -1,0 +1,10 @@
+{
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a professional software engineer adept at creating algorithmic problems."
+    },
+    { "role": "user", "content": "Please create a simple algorithmic toy-problem for me." }
+  ]
+}

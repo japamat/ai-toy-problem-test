@@ -1,1 +1,3 @@
 .dev/
+.logs/
+node_modules/
