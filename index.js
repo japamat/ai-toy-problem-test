@@ -24,6 +24,7 @@ const getApiToken = () => {
   const apiKey = getApiToken();
   const openAI = new OpenAI(apiKey)
 
+  console.log("starting convo with chatgpt 4")
   const convoTone = await openAI.setConvoTone();
   console.log(convoTone.choices)
 })()
