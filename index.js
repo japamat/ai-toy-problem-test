@@ -20,11 +20,20 @@ const getApiToken = () => {
   return chatGptApiToken;
 }
 
+/**
+ * IIFE to run the script - using IIFE pattern to use async/await instead of .then/.catch pattern
+ * separating out generating the problem and solving into two separate conversations to keep conversations separate.
+ */
 (async () => {
   const apiKey = getApiToken();
   const openAI = new OpenAI(apiKey)
 
-  console.log("starting convo with chatgpt 4")
-  const convoTone = await openAI.setConvoTone();
-  console.log(convoTone.choices)
+  const toyProblemChat = await openAI.getToyProblem();
+
+  const toyProblem = toyProblemChat.choices[0].message.content
+  console.log(toyProblem)
+
+  console.log('\nSolving Problem\n')
+  const solution = await openAI.solveToyProblem(toyProblem);
+  console.log(solution.choices[0].message.content)
 })()
