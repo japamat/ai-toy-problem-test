@@ -1,6 +1,6 @@
 import fs from "fs";
 
-import { OpenAI } from "./helpers.js";
+import { OpenAI, checkIfAlgoDirInToyProbDir } from "./helpers.js";
 
 const getSecretByName = (secretName) => {
   const secretsFile = fs.readFileSync('./.dev/secrets', 'utf8');
@@ -27,13 +27,46 @@ const getApiToken = () => {
 (async () => {
   const apiKey = getApiToken();
   const openAI = new OpenAI(apiKey)
+  let toyProblemMarkdown = fs.readFileSync('./templates/toyProblemMarkdown.md', 'utf8')
+  console.log(toyProblemMarkdown)
 
-  const toyProblemChat = await openAI.getToyProblem();
+  const unusedAlgo = openAI.getUnusedAlgo(openAI.algoList, openAI.usedAlgos)
 
+  // update the final markdown file with title of the algo
+  toyProblemMarkdown = toyProblemMarkdown.replace(/__ALGO_NAME/, unusedAlgo)
+
+  // make sure there exists a directory inside of ./toy_problems for the algorithm
+  checkIfAlgoDirInToyProbDir(unusedAlgo)
+  // future state will note use plain timestamps but will date format 
+  const now = Date.now()
+  
+  /**
+   * Ask ChatGPT to generate a toy proble,
+  */
+  const toyProblemChat = await openAI.getToyProblem(unusedAlgo);
   const toyProblem = toyProblemChat.choices[0].message.content
-  console.log(toyProblem)
+  toyProblemMarkdown = toyProblemMarkdown.replace(/__TOY_PROBLEM/, toyProblem)
+  // fs.writeFileSync(
+  //   `./toy_problems/${unusedAlgo}/${now}_prob_chat.json`,
+  //   JSON.stringify(toyProblemChat, null, 2)
+  // )
 
-  console.log('\nSolving Problem\n')
-  const solution = await openAI.solveToyProblem(toyProblem);
-  console.log(solution.choices[0].message.content)
+  /**
+   * Ask ChatGPT to solve the toy problem
+   * add solution to markdown string
+   */
+  const solutionChat = await openAI.solveToyProblem(toyProblem);
+  const solution = solutionChat.choices[0].message.content
+  toyProblemMarkdown = toyProblemMarkdown.replace(/__SOLUTION/, solution)
+
+  // fs.writeFileSync(
+  //   `./toy_problems/${unusedAlgo}/${now}_sol_chat.json`,
+  //   JSON.stringify(solutionChat, null, 2)
+  // )
+
+  /**
+   * Save the entire contents as a markdown file
+   */
+  fs.writeFileSync(`./toy_problems/${unusedAlgo}/${now}.md`, toyProblemMarkdown)
+  // console.log(solution)
 })()
