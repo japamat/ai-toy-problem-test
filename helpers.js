@@ -1,6 +1,24 @@
 import axios from "axios";
 import fs from "fs";
 
+/**
+ * 
+ * @param {string} algoName toy problem to check
+ * @description checks to see if we already have a directory inside of ./toy_problems for the target algorithm. if we dont, then we create it.
+ * @returns void
+ */
+export const checkIfAlgoDirInToyProbDir = (algoName) => {
+  const toyProlemDirContents = fs.readdirSync('./toy_problems');
+  const toyProblemSubDirs = toyProlemDirContents.filter((dirContent) => {
+    return fs.statSync(`./toy_problems/${dirContent}`).isDirectory();
+  })
+
+  const algoDirExists = toyProblemSubDirs.includes(algoName);
+  
+  if (!algoDirExists) {
+    fs.mkdirSync(`./toy_problems/${algoName}`)
+  }
+}
 
 export class OpenAI {
   constructor(apiKey, model = "gpt-4") {
@@ -31,7 +49,7 @@ export class OpenAI {
     }
   }
 
-  _getUnusedAlgo = (algoListObj) => {
+  getUnusedAlgo = (algoListObj) => {
     const algoList = Object.values(algoListObj)
     const usedAlgosKeys = Object.values(this.usedAlgos)
 
@@ -49,7 +67,7 @@ export class OpenAI {
     return unusedAlgo;
   }
 
-  getToyProblem = async () => {
+  getToyProblem = async (unusedAlgo) => {
     // need to compare two lists, the used_algos and the algo_list
     // need to get the next algo, can be a .filter on keys for "not found"
     /**
@@ -58,11 +76,20 @@ export class OpenAI {
      * 2.1 DONE - update prompt text with unused algo (__ALGO_NAME)
      * 3. DONE - ask GPT model for toy problem for algo
      * 4. DONE - ask GPT to solve algo
+     * 
+     * TODO:
      * 5. add algo to "used_algo" json
      * 6. write new "used_algo" file
+     * 
+     * 
+     * 
+     * DONE - Also need to make a markdown file.
+     * 
+     *  DONE - should also make a new folder if we dont have one for the toy problem
+     * 
+     * DONE - need to separate getting the toy problem name from this method
      */
     try {
-      const unusedAlgo = this._getUnusedAlgo(this.algoList, this.usedAlgos);
       this.defaultPrompt.genProblem.messages[1].content =
         this.defaultPrompt.genProblem.messages[1].content.replace(/__ALGO_NAME/, unusedAlgo)
 
