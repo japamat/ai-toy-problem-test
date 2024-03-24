@@ -46,7 +46,7 @@ export const getUnusedAlgo = () => {
   for (const algoDirName in algoAttemptFreqCount) {
     // check to see if the current algo attempt count is lower than lowestAlgoAttempts
     const curAlgoAttempts = algoAttemptFreqCount[algoDirName].attempts;
-    if (curAlgoAttempts === 0) {
+    if (curAlgoAttempts === 0 && !toyProlemDirContents.includes(algoDirName)) {
       fs.mkdirSync(path.resolve(`./toy_problems/${algoDirName}`));
     }
     if (curAlgoAttempts < lowestAlgoAttempts) {
