@@ -1,31 +1,33 @@
 import fs from 'fs'
 import path from 'path'
 
-import { algoNameRegex, replacerFunc } from './stringRelated.js';
 import { parseJsonFile } from './jsonRelated.js';
 
 /**
- * @abstract in order to see if we have already tried to solve an algorithm or not, we read the contents of the `toy_problems` directory. Those contents will tell us whether or not we have tried to, also how many times we have
+ * @abstract this function determines the next algorithm to attempt. it iterates
+ * through the json list of algorithms and then creates a frequency count of
+ * attempts by reading the contents of the `toy_problems` directory and counting
+ * how many files files matching the attempt format there are.
  * @param {string} algoName name of the algorithm to check if we've already tested
+ * @returns {string} the common name of the algorithm to use.
  */
-export const getUnusedAlgo = () => {
+export const getLeastUsedAlgo = () => {
   // [["Bubble Sort", "bubble_sort"],["Selection Sort", "selection_sort"]]
-  const algoList = Object.entries(parseJsonFile('./algo_list_test.json'));
+  const algoList = Object.entries(parseJsonFile('./data/algo_list_test.json'));
 
   // ["bubble_sort", "selection_sort"]
   const toyProlemDirContents = fs.readdirSync(path.resolve('./toy_problems'));
 
   /**
-   * thinking i can go through the algoList instead of the toyProblemDirContents
-   * this will build a freqCount with 0s natively, and means i wont need to filter out for is algo because i'll only be looking at algos.
+   * iterate through the algorithm list to see how many times we
+   * have attempted each algorithm
    */
-  // make sure we're only evaluating directories that are related to algorithms
   const algoAttemptFreqCount = algoList.reduce(
     (acc, [algoCommonName, algoDirName]) => {
 
       acc[algoDirName] = {
         algoCommonName,
-        // if its not there...
+        // if the algo is present in the toy_problems dir, count the attempts
         attempts: toyProlemDirContents.includes(algoDirName) ?
           getSubDirCount(algoDirName)
           : 0,
@@ -36,28 +38,33 @@ export const getUnusedAlgo = () => {
     {},
   );
 
-  console.log('freqCount', algoAttemptFreqCount)
-
   /**
-   * TODO: Explain whats going on here
+   * Iterate through frequency count object to find the least used algorithm
    */
   let leastAttemptedAlgo = null;
+  let leastAttemptedAlgoDirName = null;
   let lowestAlgoAttempts = Infinity;
+
   for (const algoDirName in algoAttemptFreqCount) {
-    // check to see if the current algo attempt count is lower than lowestAlgoAttempts
     const curAlgoAttempts = algoAttemptFreqCount[algoDirName].attempts;
+
+    // create a directory for the algorithm if it doesnt yet exist
     if (curAlgoAttempts === 0 && !toyProlemDirContents.includes(algoDirName)) {
       fs.mkdirSync(path.resolve(`./toy_problems/${algoDirName}`));
     }
+
+    // compare current algo attempts to lowestAlgoAttempts
     if (curAlgoAttempts < lowestAlgoAttempts) {
       leastAttemptedAlgo = algoAttemptFreqCount[algoDirName].algoCommonName;
+      leastAttemptedAlgoDirName = algoDirName;
       lowestAlgoAttempts = curAlgoAttempts;
     }
   }
 
-  console.log('leastAttemptedAlgo: ', leastAttemptedAlgo)
-
-  return leastAttemptedAlgo;
+  return {
+    algoName: leastAttemptedAlgo,
+    algoDirName: leastAttemptedAlgoDirName
+  };
 }
 
 /**

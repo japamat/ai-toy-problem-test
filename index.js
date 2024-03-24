@@ -2,12 +2,11 @@ import fs from "fs";
 
 import {
   OpenAI,
-  checkIfAlgoDirInToyProbDir,
 } from "./helpers/OpenAI.js";
 import { algoNameRegex, replacerFunc } from "./helpers/stringRelated.js";
 import { parseJsonFile } from "./helpers/jsonRelated.js";
 import path from "path";
-import { getUnusedAlgo } from "./helpers/getUnusedAlgo.js";
+import { getLeastUsedAlgo } from "./helpers/getLeastUsedAlgo.js";
 
 const getSecretByName = (secretName) => {
   const secretsFile = fs.readFileSync('./.dev/secrets', 'utf8');
@@ -37,42 +36,30 @@ const getApiToken = () => {
   const openAI = new OpenAI(apiKey, model)
 
   let toyProblemMarkdown = fs.readFileSync('./templates/toyProblemMarkdown.md', 'utf8')
-  // console.log(toyProblemMarkdown)
 
-  // console.log(getUnusedAlgo())
-
-  // const unusedAlgo = openAI.getUnusedAlgo(openAI.algoList, openAI.usedAlgos)
-  const unusedAlgo = getUnusedAlgo();
-  console.log('index.js: 46 - ', unusedAlgo);
-  return;
-  const fileDirSafeAlgoName = unusedAlgo
-    .toLowerCase()
-    .replace(algoNameRegex, replacerFunc);
+  const { algoName, algoDirName } = getLeastUsedAlgo();
+  console.log('index.js: 42 - ',  algoName);
+  console.log('index.js: 43 - ',  algoDirName);
 
   // update the final markdown file with title of the algo
-  toyProblemMarkdown = toyProblemMarkdown.replace(/__ALGO_NAME/, unusedAlgo)
+  toyProblemMarkdown = toyProblemMarkdown.replace(/__ALGO_NAME/,  algoName)
   toyProblemMarkdown = toyProblemMarkdown.replace(/__MODEL/, model)
-
-  // make sure there exists a directory inside of ./toy_problems for the algorithm
-  checkIfAlgoDirInToyProbDir(fileDirSafeAlgoName)
-
+  
   const now = new Date().toISOString();
 
-  // console.log(parseJsonFile(path.resolve(__dirname, './algo_list.json')))
-
-  
   /**
    * Ask ChatGPT to generate a toy proble,
   */
-  const toyProblemChat = await openAI.getToyProblem(unusedAlgo, model);
+  const toyProblemChat = await openAI.getToyProblem(algoName, model);
+  // this is probably where we want to grab the tokens, the model used, etc.
   const toyProblem = toyProblemChat.choices[0].message.content
   toyProblemMarkdown = toyProblemMarkdown.replace(/__TOY_PROBLEM/, toyProblem)
 
 
-  // fs.writeFileSync(
-  //   `./toy_problems/${unusedAlgo}/${now}_prob_chat.json`,
-  //   JSON.stringify(toyProblemChat, null, 2)
-  // )
+  fs.writeFileSync(
+    `./.dev/prompt_json/${algoName}_${now}_prob_chat.json`,
+    JSON.stringify(toyProblemChat, null, 2)
+  )
 
   /**
    * Ask ChatGPT to solve the toy problem
@@ -83,13 +70,13 @@ const getApiToken = () => {
   toyProblemMarkdown = toyProblemMarkdown.replace(/__SOLUTION/, solution)
 
   // fs.writeFileSync(
-  //   `./toy_problems/${unusedAlgo}/${now}_sol_chat.json`,
+  //   `./toy_problems/${ algoName}/${now}_sol_chat.json`,
   //   JSON.stringify(solutionChat, null, 2)
   // )
 
   /**
    * Save the entire contents as a markdown file
    */
-  fs.writeFileSync(`./toy_problems/${fileDirSafeAlgoName}/${now}.md`, toyProblemMarkdown)
+  fs.writeFileSync(`./toy_problems/${algoDirName}/${now}_${algoDirName}.md`, toyProblemMarkdown)
   // console.log(solution)
 })()
