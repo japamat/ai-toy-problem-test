@@ -1,0 +1,5 @@
+{
+  "Bubble Sort": "bubble_sort",
+  "Selection Sort": "selection_sort",
+  "Insertion Sort": "insertion_sort"
+}

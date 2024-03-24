@@ -34,14 +34,17 @@ const getApiToken = () => {
 (async () => {
   const model = 'gpt-4';
   const apiKey = getApiToken();
-  const openAI = new OpenAI(apiKey)
+  const openAI = new OpenAI(apiKey, model)
 
   let toyProblemMarkdown = fs.readFileSync('./templates/toyProblemMarkdown.md', 'utf8')
   // console.log(toyProblemMarkdown)
 
   // console.log(getUnusedAlgo())
 
-  const unusedAlgo = openAI.getUnusedAlgo(openAI.algoList, openAI.usedAlgos)
+  // const unusedAlgo = openAI.getUnusedAlgo(openAI.algoList, openAI.usedAlgos)
+  const unusedAlgo = getUnusedAlgo();
+  console.log(unusedAlgo);
+  return;
   const fileDirSafeAlgoName = unusedAlgo
     .toLowerCase()
     .replace(algoNameRegex, replacerFunc);
