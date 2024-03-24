@@ -43,7 +43,7 @@ const getApiToken = () => {
 
   // const unusedAlgo = openAI.getUnusedAlgo(openAI.algoList, openAI.usedAlgos)
   const unusedAlgo = getUnusedAlgo();
-  console.log(unusedAlgo);
+  console.log('index.js: 46 - ', unusedAlgo);
   return;
   const fileDirSafeAlgoName = unusedAlgo
     .toLowerCase()
