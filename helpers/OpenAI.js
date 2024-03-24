@@ -32,20 +32,10 @@ export class OpenAI {
     this.model = model;
     this.baseUrl = 'https://api.openai.com/v1/chat/completions';
     // this.defaultPrompt = this._parseJsonFile('./systemPrompt.json');
-    this.algoList = parseJsonFile('./algo_list.json');
-    // this.usedAlgos = parseJsonFile('./used_algos.json');
-    this.usedAlgos = {};
-    // this.algoList = this._parseJsonFile('./algo_list.json');
-    // this.usedAlgos = this._parseJsonFile('./used_algos.json');
     this.headers = {
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json'
     }
-  }
-
-  _parseJsonFile = (pathToJson) => {
-    const rawPromptText = fs.readFileSync(pathToJson, 'utf8');
-    return JSON.parse(rawPromptText);
   }
 
   _writeLogIfApiErr = (error) => {
@@ -56,24 +46,6 @@ export class OpenAI {
         JSON.stringify(error?.response?.data),
       )
     }
-  }
-
-  getUnusedAlgo = (algoListObj) => {
-    const algoList = Object.values(algoListObj)
-    const usedAlgosKeys = Object.values(this.usedAlgos)
-
-    let unusedAlgo = ""
-    // there are no used algos, edge case, need to grab the first algo in algoList
-    if (usedAlgosKeys.length === 0) {
-      unusedAlgo = algoList[0]
-    } else {
-      // iterate through the algoList, return algos not in usedAlgos arr
-      unusedAlgo = algoList.find((algoInList) => {
-        return this.usedAlgos[algoInList] === undefined
-      })
-    }
-
-    return unusedAlgo;
   }
 
   getToyProblem = async (unusedAlgo, model) => {

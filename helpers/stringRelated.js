@@ -1,3 +1,16 @@
+/**
+ * None of these are used in the current execution of the script.
+ * 
+ * We used the below when creating the current working version of
+ * the algo list. it made more sense to have an existing json stucture
+ * with algorithm common name as keys and the dir name value, which
+ * meant we didnt need to use the below in the code moving forward.
+ * 
+ * At the time, i liked using a replacer function to capture an
+ * entire group of characters and replace them individual
+ * characters specifically as needed
+ */
+
 export const algoNameRegex = /('|\(|\)|\s|\*)/g
 
 /**
