@@ -3,10 +3,10 @@ import fs from "fs";
 import {
   OpenAI,
 } from "./helpers/OpenAI.js";
-import { algoNameRegex, replacerFunc } from "./helpers/stringRelated.js";
-import { parseJsonFile } from "./helpers/jsonRelated.js";
-import path from "path";
 import { getLeastUsedAlgo } from "./helpers/getLeastUsedAlgo.js";
+import { writeJsonFile } from "./helpers/jsonRelated.js";
+import { getAlgoFileNameBase } from "./helpers/stringRelated.js";
+import { formatTokenUsage, replaceInOutputFile } from "./helpers/markdownRelated.js";
 
 const getSecretByName = (secretName) => {
   const secretsFile = fs.readFileSync('./.dev/secrets', 'utf8');
@@ -31,52 +31,61 @@ const getApiToken = () => {
  * separating out generating the problem and solving into two separate conversations to keep conversations separate.
  */
 (async () => {
-  const model = 'gpt-4';
+  const baseModel = 'gpt-4';
   const apiKey = getApiToken();
-  const openAI = new OpenAI(apiKey, model)
+  const openAI = new OpenAI(apiKey, baseModel)
 
   let toyProblemMarkdown = fs.readFileSync('./templates/toyProblemMarkdown.md', 'utf8')
-
   const { algoName, algoDirName } = getLeastUsedAlgo();
-  console.log('index.js: 42 - ',  algoName);
-  console.log('index.js: 43 - ',  algoDirName);
 
-  // update the final markdown file with title of the algo
-  toyProblemMarkdown = toyProblemMarkdown.replace(/__ALGO_NAME/,  algoName)
-  toyProblemMarkdown = toyProblemMarkdown.replace(/__MODEL/, model)
-  
-  const now = new Date().toISOString();
+  const attemptDate = new Date();
+  const algoFileNameBase = getAlgoFileNameBase(algoDirName, attemptDate);
 
   /**
    * Ask ChatGPT to generate a toy proble,
   */
-  const toyProblemChat = await openAI.getToyProblem(algoName, model);
-  // this is probably where we want to grab the tokens, the model used, etc.
-  const toyProblem = toyProblemChat.choices[0].message.content
-  toyProblemMarkdown = toyProblemMarkdown.replace(/__TOY_PROBLEM/, toyProblem)
+ console.log(`Generating toy problem for: ${algoName}`);
+  const toyProblemChat = await openAI.getToyProblem(algoName, baseModel);
+  const {
+    model: toyProblemModel,
+    usage: toyProblemUsage,
+    choices: toyProblemChoices
+  } = toyProblemChat;
+  const toyProblem = toyProblemChoices[0].message.content;
 
 
-  fs.writeFileSync(
-    `./.dev/prompt_json/${algoName}_${now}_prob_chat.json`,
-    JSON.stringify(toyProblemChat, null, 2)
-  )
+  writeJsonFile(toyProblemChat, `${algoFileNameBase}_prob.json`);
 
   /**
    * Ask ChatGPT to solve the toy problem
    * add solution to markdown string
    */
-  const solutionChat = await openAI.solveToyProblem(toyProblem, model);
-  const solution = solutionChat.choices[0].message.content
-  toyProblemMarkdown = toyProblemMarkdown.replace(/__SOLUTION/, solution)
+  console.log(`Attempting to solve ${algoName} toy problem`)
+  const solutionChat = await openAI.solveToyProblem(toyProblem, baseModel);
+  const {
+    model: solutionModel,
+    usage: solutionUsage,
+    choices: solutionChoices
+  } = solutionChat;
+  const solution = solutionChoices[0].message.content;
+  
+  writeJsonFile(solutionChat, `${algoFileNameBase}_sol.json`);
 
-  // fs.writeFileSync(
-  //   `./toy_problems/${ algoName}/${now}_sol_chat.json`,
-  //   JSON.stringify(solutionChat, null, 2)
-  // )
+  /**
+   * create output markdown file contents
+   */
+  const markdownStr = replaceInOutputFile(toyProblemMarkdown, {
+    algoName,
+    attemptDate: attemptDate.toString(),
+    baseModel,
+    toyProblemDetails: formatTokenUsage(toyProblemUsage, toyProblemModel),
+    toyProblem,
+    solutionDetails: formatTokenUsage(solutionUsage, solutionModel),
+    solution,
+  })
 
   /**
    * Save the entire contents as a markdown file
    */
-  fs.writeFileSync(`./toy_problems/${algoDirName}/${now}_${algoDirName}.md`, toyProblemMarkdown)
-  // console.log(solution)
+  fs.writeFileSync(`${algoFileNameBase}.md`, markdownStr)
 })()

@@ -1,14 +1,24 @@
 ## __ALGO_NAME
 
-##### Model: `__MODEL`
+#### Date: __ATTEMPT_DATE
+#### Base Model: `__BASE_MODEL`
+
 
 ### Toy Problem
+##### Token Details:
+__TOY_PROBLEM_DETAILS
+
+
 
 __TOY_PROBLEM
 
 </br>
 
 
-### Solution
+### Attempted Solution
+##### Token Details: 
+__SOLUTION_DETAILS
+
+
 
 __SOLUTION

@@ -1,0 +1,23 @@
+{
+  "id": "chatcmpl-96si4KlqoJzCp68sgybmFL1eii9Rw",
+  "object": "chat.completion",
+  "created": 1711427300,
+  "model": "gpt-4-0613",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Sure, Here is an optimized implementation of Bubble sort in TypeScript.\n\n```typescript\nfunction bubbleSort(arr: number[]): number[] {\n    let n = arr.length;\n    let swapped; // flag to check if swap occurred in a pass\n\n    do {\n        swapped = false;\n        for (let i = 0; i < n - 1; i++) {\n            if (arr[i] > arr[i + 1]) {\n                let temp = arr[i];\n                arr[i] = arr[i + 1];\n                arr[i + 1] = temp;\n                swapped = true;\n            }\n        }\n        n = n - 1; // largest number is at end, so no need to check it again\n    } while (swapped) // if no swap occurred in a pass, then array is sorted\n\n    return arr;\n}\n```\n\nThe 'swapped' flag optimization removes the need for unnecessary passes through the array once it is sorted.\n\nLet's try an example:\n\n```typescript\nconsole.log(bubbleSort([5,3,8,4,2])); //Output: [2,3,4,5,8]\n```\n\nNote: Bubble sort has a worst-case and average time complexity of O(n^2), where n is the number of items being sorted. Therefore, even with the optimization, for larger data sets, a different sorting algorithm might be more efficient."
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 278,
+    "completion_tokens": 288,
+    "total_tokens": 566
+  },
+  "system_fingerprint": null
+}

@@ -1,0 +1,23 @@
+{
+  "id": "chatcmpl-96snwSsS9gmuZf3fVNXCcpZtIX9OA",
+  "object": "chat.completion",
+  "created": 1711427664,
+  "model": "gpt-4-0613",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Problem:\n\nThe objective of this problem is to practice and understand the Bubble Sort Algorithm. \n\nBubble sort is a simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order. The pass through the list is repeated until the list is sorted. \n\nYou are given a list of 'n' numbers, and your task is to write a code to sort these numbers in ascending order using the Bubble Sort Algorithm.\n\nImplement a function `bubbleSort(input_list)`, where:\n\n- `input_list` ( 1 ≤ |input_list| ≤ 1000): A list of integers.\n\nReturn a list of integers, sorted in ascending order.\n\n**Example**\n\nInput\n\nbubbleSort([39, 78, 23, 56, 94, 65])\n\nOutput\n\n[23, 39, 56, 65, 78, 94]\n\n**Note:**\n\nThe given list is [39, 78, 23, 56, 94, 65], applying the bubble sort on this list.\n\nIn the first pass, comparing the adjacent numbers we swap them if the number on the left is greater than the number on the right. After the first pass the list becomes [39, 23, 56, 78, 65, 94].\n\nWe continue these passes until the list is sorted.\n\nFinally, the sorted list is [23, 39, 56, 65, 78, 94].\n\n**Constraints**\n\nDo not use built-in sorting functions. The aim is to understand and practice the Bubble Sort algorithm.\n\n**Hint**\n- Start by comparing the first two numbers, swap them if the first one is greater than the second one.\n- Then compare the second and third numbers, swap them if the second one is greater than the third one.\n- Continue this way until you reach the end of the list.\n- Repeat this process until the list is sorted."
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 38,
+    "completion_tokens": 396,
+    "total_tokens": 434
+  },
+  "system_fingerprint": null
+}
