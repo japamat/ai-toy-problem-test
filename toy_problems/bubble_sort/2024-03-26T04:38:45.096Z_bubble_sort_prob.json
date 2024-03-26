@@ -1,0 +1,23 @@
+{
+  "id": "chatcmpl-96ss9pQpeYcVapOh69ZJ90R0coQpe",
+  "object": "chat.completion",
+  "created": 1711427925,
+  "model": "gpt-4-0613",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Programming Task: Bubble Sort\n\nTask Description:\n\nIn this task, you will implement the bubble sort algorithm to sort an array of integers in ascending order.\n\nBubble sort is a simple algorithm that works by repeatedly stepping through the list, comparing each pair of adjacent items and swapping them if they are in the wrong order. The 'pass through' the list is repeated until no further swaps are needed, indicating that the list is sorted.\n\nPlease create a function called `bubbleSort` that receives an array of integers as a parameter and returns the sorted array.\n\nFunction signature:\n```python\ndef bubbleSort(arr: list) -> list:\n```\n\nInput:\n* The function takes in a list of integers, `arr` (1 <= len(arr) <= 10^4), where each integer, n, (-10^6 <= n <= 10^6).\n\nOutput:\n* The function should return a list of sorted integers in ascending order.\n\nConstraints:\n* Test cases do not include null or empty arrays.\n* You can assume there won't be any duplicate numbers in the given array.\n* The algorithms runtime should not exceed O(n^2).\n\nExample:\n\nbubbleSort([5, 3, 8, 4, 6])\n\nShould return: [3, 4, 5, 6, 8]\n\nNote: This problem does not have unique solutions and various implementation strategies can be employed as long as it follows the bubble sort algorithm."
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 38,
+    "completion_tokens": 292,
+    "total_tokens": 330
+  },
+  "system_fingerprint": null
+}

@@ -1,0 +1,23 @@
+{
+  "id": "chatcmpl-96t152hHM1hFGjmzRoXYNkrRMBM62",
+  "object": "chat.completion",
+  "created": 1711428479,
+  "model": "gpt-4-0613",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Here is a Python implementation of the Merge Sort algorithm:\n\n```python\nfrom typing import List\n\ndef merge(arr1: List[int], arr2: List[int]) -> List[int]:\n    # Function to merge two sorted lists\n    sorted_arr = []\n    i = j = 0\n    while i < len(arr1) and j < len(arr2):\n        if arr1[i] < arr2[j]:\n            sorted_arr.append(arr1[i])\n            i += 1\n        else:\n            sorted_arr.append(arr2[j])\n            j += 1\n    while i < len(arr1):\n        sorted_arr.append(arr1[i])\n        i += 1\n    while j < len(arr2):\n        sorted_arr.append(arr2[j])\n        j += 1\n    return sorted_arr\n\ndef mergeSort(arr: List[int]) -> List[int]:\n    # Base case: If list has 1 or 0 element, it is already sorted\n    if len(arr) <= 1:\n        return arr\n    mid = len(arr) // 2\n    # Divide \n    left = mergeSort(arr[:mid])\n    right = mergeSort(arr[mid:])\n    # Conquer: Merge two sorted halves\n    return merge(left, right)\n```\nIn the `mergeSort` function, we first check if the length of `arr` is less than or equal to 1. If it is, we simply return `arr` as it is already sorted. Otherwise, we find the middle index of `arr` and divide `arr` into two halves. We recursively sort the left and right halves, and then merge them using the `merge` function to produce the final sorted list.\n\nThe `merge` function takes in two sorted lists `arr1` and `arr2`, and merges them into a single sorted list. It maintains two pointers `i` and `j`, that point to the current elements being considered in `arr1` and `arr2` respectively. At each step, it appends the smaller of these two elements to the final sorted list, and increments the pointer for the list from which this smaller element was taken. When one of the lists is exhausted, it appends all remaining elements from the other list to the final list.\n\nThe time complexity of merge sort is O(N log N) where N is the number of elements in the list, as we divide the problem into two halves at each level and repeat this process log N levels deep, and merging at each level takes O(N) time. The space complexity is also O(N), due to the extra space needed for the `merge` function.\n"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 411,
+    "completion_tokens": 540,
+    "total_tokens": 951
+  },
+  "system_fingerprint": null
+}

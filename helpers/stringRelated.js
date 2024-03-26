@@ -31,3 +31,14 @@ export const replacerFunc = (matchStr) => {
       return '';
   }
 }
+
+/**
+ * 
+ * @param {string} algoDirName name of attempted algorithm i.e. bubble_sort
+ * @param {Date} attemptDate javascript date object denoting when the attempt initiated
+ * @returns string
+ */
+export const getAlgoFileNameBase = (algoDirName, attemptDate) => {
+  const attemptISO = attemptDate.toISOString();
+  return `./toy_problems/${algoDirName}/${attemptISO}_${algoDirName}`;
+}

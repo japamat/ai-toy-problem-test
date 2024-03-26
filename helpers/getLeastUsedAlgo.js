@@ -13,7 +13,7 @@ import { parseJsonFile } from './jsonRelated.js';
  */
 export const getLeastUsedAlgo = () => {
   // [["Bubble Sort", "bubble_sort"],["Selection Sort", "selection_sort"]]
-  const algoList = Object.entries(parseJsonFile('./data/algo_list_test.json'));
+  const algoList = Object.entries(parseJsonFile('./data/algo_list.json'));
 
   // ["bubble_sort", "selection_sort"]
   const toyProlemDirContents = fs.readdirSync(path.resolve('./toy_problems'));
@@ -37,6 +37,8 @@ export const getLeastUsedAlgo = () => {
     },
     {},
   );
+
+  console.log('getLeastUsedAlgo > L41: ', algoAttemptFreqCount)
 
   /**
    * Iterate through frequency count object to find the least used algorithm

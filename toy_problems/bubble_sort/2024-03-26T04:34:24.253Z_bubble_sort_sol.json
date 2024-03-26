@@ -1,0 +1,23 @@
+{
+  "id": "chatcmpl-96soE7txrzUa14OZh7XRXb1qB7Tvf",
+  "object": "chat.completion",
+  "created": 1711427682,
+  "model": "gpt-4-0613",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Sure, here is a Python implementation of the Bubble Sort algorithm. This function sorts a list in place using the Bubble Sort algorithm. \n\n```Python\ndef bubbleSort(input_list):\n    n = len(input_list)\n    # Traverse through all list elements\n    for i in range(n):\n        # Last i elements are already in place\n        for j in range(0, n - i - 1):\n            # Traverse the list from 0 to n-i-1\n            # Swap if the element found is greater\n            # than the next element\n            if input_list[j] > input_list[j+1] :\n                input_list[j], input_list[j+1] = input_list[j+1], input_list[j]\n    return input_list\n```\nThis function works by repeatedly swapping adjacent elements if they are in the wrong order. It continues to do this until no more swaps are needed, indicating that the list has been sorted.\n\nLet's run our function with your sample input:\n\n```Python\nprint(bubbleSort([39, 78, 23, 56, 94, 65]))\n```\n\nOutput:\n\n```Python\n[23, 39, 56, 65, 78, 94]\n```\n\nAs seen, the bubbleSort function has successfully sorted the input list in ascending order."
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 430,
+    "completion_tokens": 272,
+    "total_tokens": 702
+  },
+  "system_fingerprint": null
+}
